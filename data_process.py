@@ -16,6 +16,13 @@ export_names = ["id", "duration", "protocol_type", "service", "flag", "src_bytes
                 "dst_host_rerror_rate", "dst_host_srv_rerror_rate", "src_ip", "src_port", "dst_ip", "dst_port", "src_ip_info", "dst_ip_info",
                 "conn_end_time", "label", "coarse_type", "fine_type"]
 
+big_types = {
+    'DoS': ["apache2", "back", "land", "mailbomb", "neptune", "pod", "processtable", "smurf", "teardrop", "udpstorm", "worm"],
+    'Probe': ["ipsweep", "mscan", "nmap", "portsweep", "saint", "satan"],
+    'U2R': ["buffer_overflow", "loadmodule", "perl", "ps", "rootkit", "sqlattack", "xterm"],
+    'R2L': ["ftp_write", "guess_passwd", "httptunnel", "imap", "multihop", "named", "phf", "sendmail", "snmpgetattack", "snmpguess", "spy", "warezclient", "warezmaster", "xlock", "xsnoop"]
+}
+
 # Label encode
 protocol_type_list = ['tcp', 'udp', 'icmp']
 service_list = ['http', 'private', 'domain_u', 'smtp', 'ftp_data', 'other', 'eco_i', 'telnet', 'ecr_i', 'ftp', 'finger',
@@ -73,10 +80,26 @@ def generate_KDD_multi_y(inFile, yFile):
     y.to_csv(yFile, index=False)
 
 
+def generate_specific():
+    for select_type in list(big_types.keys()):
+        y = pd.read_csv('dataset/KDDTrain+/y_multi.csv')
+        for small_type in big_types[select_type]:
+            y[y['class'] == small_type] = '1'
+        y[y['class'] != '1'] = '0'
+        y.to_csv('dataset/KDDTrain+/y_{}.csv'.format(select_type), index=False)
+
+        y = pd.read_csv('dataset/KDDTest+/y_multi.csv')
+        for small_type in big_types[select_type]:
+            y[y['class'] == small_type] = '1'
+        y[y['class'] != '1'] = '0'
+        y.to_csv('dataset/KDDTest+/y_{}.csv'.format(select_type), index=False)
+
+
 if __name__ == '__main__':
     # generate_normal()
     # generate_KDD("dataset/KDDTrain+/KDDTrain+_binary.csv", "dataset/KDDTrain+/x.csv", "dataset/KDDTrain+/y.csv")
     # generate_KDD("dataset/KDDTest+/KDDTest+_binary.csv", "dataset/KDDTest+/x.csv", "dataset/KDDTest+/y.csv")
     # generate_KDD_multi_y("dataset/KDDTrain+/KDDTrain+_multi.csv", "dataset/KDDTrain+/y_multi.csv")
     # generate_KDD_multi_y("dataset/KDDTest+/KDDTest+_multi.csv", "dataset/KDDTest+/y_multi.csv")
+    generate_specific()
     pass

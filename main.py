@@ -102,7 +102,7 @@ def test(model, test_data_loader):
 
 if __name__ == '__main__':
     n_features = 28
-    n_epochs = 10
+    n_epochs = 5
     batch_size = 128
     model_name = 'LSTM'
 
@@ -120,12 +120,12 @@ if __name__ == '__main__':
     model = model.double().to(device)
 
     train_dataset = KDDDataset(
-        ['dataset/KDDTrain+/x.csv', "dataset/KDDTest+/x.csv", 'dataset/NormalData/x.csv'],
-        ['dataset/KDDTrain+/y.csv', "dataset/KDDTest+/y.csv", 'dataset/NormalData/y.csv']
+        ['dataset/KDDTrain+/x.csv',         ],
+        ['dataset/KDDTrain+/y_U2R.csv',   ]
     )
     test_dataset = KDDDataset(
-        ["dataset/KDDTest+/x.csv"],
-        ["dataset/KDDTest+/y.csv"]
+        ["dataset/KDDTest+/x.csv"       ],
+        ["dataset/KDDTest+/y_U2R.csv"   ]
     )
     export_dataset = KDDDataset('dataset/NormalData/x.csv', 'dataset/NormalData/y.csv')
 
@@ -142,4 +142,4 @@ if __name__ == '__main__':
 
     # model.load_state_dict(torch.load("logs/LSTM.pth"))
 
-    test(model, export_data_loader)
+    # test(model, export_data_loader)
