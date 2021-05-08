@@ -32,7 +32,7 @@ service_map = dict(zip(service_list, range(len(service_list))))
 flag_map = dict(zip(flag_list, range(len(flag_list))))
 
 
-def encode(x: pd.DataFrame):
+def encode_x(x: pd.DataFrame):
     x['protocol_type'] = x['protocol_type'].map(protocol_type_map)
     x['service'] = x['service'].map(service_map)
     x['flag'] = x['flag'].map(flag_map)
@@ -52,23 +52,31 @@ def encode(x: pd.DataFrame):
 
 def generate_KDD(inFile, xFile, yFile):
     data = pd.read_csv(inFile).loc[:, selected_columns + ['class']]
-    x = encode(data.loc[:, selected_columns])
+    x = encode_x(data.loc[:, selected_columns])
     y = data['class'].replace('normal', '0').replace('anomaly', '1')
 
     x.to_csv(xFile, index=False)
     y.to_csv(yFile, index=False)
 
 
-def generate_export():
-    x = pd.read_csv("dataset/ExportData/ExportData.csv", names=export_names).loc[:, selected_columns]
-    x = encode(x)
-    x.to_csv("dataset/ExportData/x.csv", index=False)
+def generate_normal():
+    x = pd.read_csv("dataset/NormalData/NormalData.csv", names=export_names).loc[:, selected_columns]
+    x = encode_x(x)
+    x.to_csv("dataset/NormalData/x.csv", index=False)
 
     y = pd.DataFrame([0] * x.shape[0], columns=["class"])
-    y.to_csv("dataset/ExportData/y.csv", index=False)
+    y.to_csv("dataset/NormalData/y.csv", index=False)
+
+
+def generate_KDD_multi_y(inFile, yFile):
+    y = pd.read_csv(inFile)['class']
+    y.to_csv(yFile, index=False)
 
 
 if __name__ == '__main__':
-    generate_export()
-    generate_KDD("dataset/KDDTrain+_binary/KDDTrain+_binary.csv", "dataset/KDDTrain+_binary/x.csv", "dataset/KDDTrain+_binary/y.csv")
-    generate_KDD("dataset/KDDTest+_binary/KDDTest+_binary.csv", "dataset/KDDTest+_binary/x.csv", "dataset/KDDTest+_binary/y.csv")
+    # generate_normal()
+    # generate_KDD("dataset/KDDTrain+/KDDTrain+_binary.csv", "dataset/KDDTrain+/x.csv", "dataset/KDDTrain+/y.csv")
+    # generate_KDD("dataset/KDDTest+/KDDTest+_binary.csv", "dataset/KDDTest+/x.csv", "dataset/KDDTest+/y.csv")
+    # generate_KDD_multi_y("dataset/KDDTrain+/KDDTrain+_multi.csv", "dataset/KDDTrain+/y_multi.csv")
+    # generate_KDD_multi_y("dataset/KDDTest+/KDDTest+_multi.csv", "dataset/KDDTest+/y_multi.csv")
+    pass

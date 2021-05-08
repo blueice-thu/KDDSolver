@@ -200,14 +200,14 @@ if __name__ == '__main__':
     model = model.double().to(device)
 
     train_dataset = KDDDataset(
-        ['dataset/KDDTrain+_binary/x.csv', "dataset/KDDTest+_binary/x.csv", 'dataset/ExportData/x.csv'],
-        ['dataset/KDDTrain+_binary/y.csv', "dataset/KDDTest+_binary/y.csv", 'dataset/ExportData/y.csv']
+        ['dataset/KDDTrain+/x.csv', "dataset/KDDTest+/x.csv", 'dataset/NormalData/x.csv'],
+        ['dataset/KDDTrain+/y.csv', "dataset/KDDTest+/y.csv", 'dataset/NormalData/y.csv']
     )
     test_dataset = KDDDataset(
-        ["dataset/KDDTest+_binary/x.csv"],
-        ["dataset/KDDTest+_binary/y.csv"]
+        ["dataset/KDDTest+/x.csv"],
+        ["dataset/KDDTest+/y.csv"]
     )
-    export_dataset = KDDDataset('dataset/ExportData/x.csv', 'dataset/ExportData/y.csv')
+    export_dataset = KDDDataset('dataset/NormalData/x.csv', 'dataset/NormalData/y.csv')
 
     train_data_loader = torch.utils.data.DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     test_data_loader = torch.utils.data.DataLoader(test_dataset, batch_size=batch_size, shuffle=True)
